@@ -42,14 +42,16 @@ def main(ctx):
 @click.option('--email', prompt='User Email', help='email address of the user')
 @click.option('--overwrite', is_flag=True, default=False,
               help='overwrite a repository if it exists at the current path')
+@click.option('--description', prompt='Description',
+              help='description of the repository')
 @pass_repo
-def init(repo: Repository, name, email, overwrite):
+def init(repo: Repository, name, email, description, overwrite):
     """Initialize an empty repository at the current path
     """
     if repo.initialized and (not overwrite):
         click.echo(f'Repo already exists at: {repo.path}')
     else:
-        repo.init(user_name=name, user_email=email, remove_old=overwrite)
+        repo.init(user_name=name, user_email=email, repo_desc=description, remove_old=overwrite)
 
 
 # ---------------------------- Remote Interaction -----------------------------
@@ -59,10 +61,11 @@ def init(repo: Repository, name, email, overwrite):
 @click.argument('remote', nargs=1, required=True)
 @click.option('--name', prompt='User Name', help='first and last name of user')
 @click.option('--email', prompt='User Email', help='email address of the user')
+@click.option('--description', prompt='Description', help='description of the repository')
 @click.option('--overwrite', is_flag=True, default=False,
               help='overwrite a repository if it exists at the current path')
 @pass_repo
-def clone(repo: Repository, remote, name, email, overwrite):
+def clone(repo: Repository, remote, name, email, description, overwrite):
     """Initialize a repository at the current path and fetch updated records from REMOTE.
 
     Note: This method does not actually download the data to disk. Please look
@@ -71,7 +74,7 @@ def clone(repo: Repository, remote, name, email, overwrite):
     if repo.initialized and (not overwrite):
         click.echo(f'Repo already exists at: {repo.path}')
     else:
-        repo.clone(name, email, remote, remove_old=overwrite)
+        repo.clone(name, email, description, remote, remove_old=overwrite)
 
 
 @main.command(name='fetch')

@@ -245,7 +245,7 @@ class Repository(object):
         except (RuntimeError, ValueError) as e:
             raise e from None
 
-    def clone(self, user_name: str, user_email: str, remote_address: str,
+    def clone(self, user_name: str, user_email: str, repo_desc:str, remote_address: str,
               *, remove_old: bool = False) -> str:
         """Download a remote repository to the local disk.
 
@@ -263,6 +263,8 @@ class Repository(object):
         user_email : str
             Email address of the repository user. This information is recorded
             permanently in any commits created.
+        repo_desc : str
+            Description of the repository
         remote_address : str
             location where the
             :class:`hangar.remote.server.HangarServer` process is
@@ -280,7 +282,7 @@ class Repository(object):
         str
             Name of the master branch for the newly cloned repository.
         """
-        self.init(user_name=user_name, user_email=user_email, remove_old=remove_old)
+        self.init(user_name=user_name, user_email=user_email, repo_desc=repo_desc, remove_old=remove_old)
         self._remote.add(name='origin', address=remote_address)
         branch = self._remote.fetch(remote='origin', branch='master')
         HEAD = heads.get_branch_head_commit(self._env.branchenv, branch_name=branch)
@@ -295,6 +297,7 @@ class Repository(object):
     def init(self,
              user_name: str,
              user_email: str,
+             repo_desc: str,
              *,
              remove_old: bool = False) -> os.PathLike:
         """Initialize a Hangar repository at the specified directory path.
@@ -307,6 +310,8 @@ class Repository(object):
             Name of the repository user account.
         user_email : str
             Email address of the repository user account.
+        repo_desc : str
+            Description of the repository.
         remove_old : bool, kwarg-only
             DEVELOPER USE ONLY -- remove and reinitialize a Hangar
             repository at the given path, Default = False
@@ -318,7 +323,7 @@ class Repository(object):
             initialized on disk.
         """
         pth = self._env._init_repo(
-            user_name=user_name, user_email=user_email, remove_old=remove_old)
+            user_name=user_name, user_email=user_email, repo_desc=repo_desc, remove_old=remove_old)
         return pth
 
     def log(self,

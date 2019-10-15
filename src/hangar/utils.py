@@ -372,7 +372,7 @@ def parse_bytes(s: str) -> int:
     return int(n * mult)
 
 
-def readme_contents(user_name: str, user_email: str) -> StringIO:
+def readme_contents(user_name: str, user_email: str, repo_desc: str) -> StringIO:
     """Create the Hangar README.txt contents used to fill out file on repo initialization
 
     Parameters
@@ -381,6 +381,8 @@ def readme_contents(user_name: str, user_email: str) -> StringIO:
         name of the user initializing the repository on the machine.
     user_email : str
         email of the user initializing the repository on the machine.
+    repo_desc: str
+        description of repository
 
     Returns
     -------
@@ -393,6 +395,7 @@ def readme_contents(user_name: str, user_email: str) -> StringIO:
     buf.write(f'This repository was initialized by:\n')
     buf.write(f'    User Name:        {user_name}\n')
     buf.write(f'    User Email:       {user_email}\n')
+    buf.write(f'    Description:       {repo_desc}\n')
     buf.write(f'    Creation Time:    {time.asctime(time.gmtime())} UTC\n')
     buf.write(f'    Software Version: {__version__}\n')
     buf.write(f'\n')
